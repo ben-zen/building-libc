@@ -46,7 +46,15 @@ gdtoa_files = files(
 
 gdtoa_includes = include_directories('gdtoa/include')
 
+gdtoa_compiler_flags = [
+  '-DNO_ERRNO',
+  '-DIFNAN_CHECK',
+  '-DGDTOA_NO_ASSERT',
+  '-DNO_FENV_H'
+]
+
 libgdtoa = static_library('gdtoa',
 			  gdtoa_files,
 			  include_directories: gdtoa_includes,
+			  c_args: gdtoa_compiler_flags,
 			 )
