@@ -203,15 +203,15 @@ wchar_files = files(
 
 # Files commonly used by all libc targets
 libc_common_files = [
-#  assert_files,
+  assert_files,
   ctype_files,
   locale_files,
-#  math_files,
-#  stdio_files,
+  math_files,
+  stdio_files,
   stdlib_files,
   string_files,
   support_files,
-#  time_files,
+  time_files,
   wchar_files
 ]
 
@@ -236,9 +236,11 @@ libgdtoa = static_library('gdtoa',
 			  c_args: gdtoa_compiler_flags,
 			 )
 
-libc_native = static_library('c',
-			     libc_common_files + libc_native_files,
-			     include_directories: [libc_includes,
-						   arch_specific_includes],
-			    )
+libc_native = static_library(
+  'c',
+  libc_common_files + libc_native_files,
+  include_directories: [libc_includes,
+			arch_specific_includes],
+  dependencies: [libprintf_dep, openlibm_dep]
+)
 			     
