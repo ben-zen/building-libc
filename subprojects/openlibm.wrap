@@ -1,0 +1,3 @@
+[wrap-git]
+url=git@github.com:JuliaMath/openlibm.git
+revision=5b0e7e9
