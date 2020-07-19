@@ -73,4 +73,4 @@ libc_tests = executable('libc_test',
 			libc_test_files,
 			c_args: '-DLIBBSD_OVERLAY',
 			include_directories: libc_tests_includes,
-			dependencies: [libbsd_dep, cmocka_dep])
+			dependencies: [libbsd_dep, cmocka_dep, libc_native_dep])
