@@ -74,3 +74,8 @@ libc_tests = executable('libc_test',
 			c_args: '-DLIBBSD_OVERLAY',
 			include_directories: libc_tests_includes,
 			dependencies: [libbsd_dep, cmocka_dep, libc_native_dep])
+
+test_output_dir = 'CMOCKA_XML_FILE=' + meson.build_root() + '/test/%g.xml'
+test('libc_tests',
+     libc_tests,
+     env: [test_output_dir])
