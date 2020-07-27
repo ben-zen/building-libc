@@ -55,6 +55,9 @@ run_target('printf-tests',
 run_target('printf-tests-xml',
            command: [printf_tests, '-s', '-r', 'xml', '-o', meson.build_root() + '/test/printf_tests.xml'])
 
+run_target('clear-test-results',
+           command: [meson.source_root() + '/tools/clean-xml-tests.sh'])
+
 cmocka_dep = dependency('cmocka', required: false, fallback: ['cmocka', 'cmocka_dep'])
 
 
