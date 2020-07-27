@@ -82,6 +82,8 @@ test('libc_tests',
 
 run_target('libc-tests-xml',
            command: [
-             meson.source_root() + '/tools/libc_tests_xml.sh'],
+             meson.source_root() + '/tools/run_with_env.sh',
+             libc_tests,
+             test_output_dir],
            depends: [ libc_tests ])
             
