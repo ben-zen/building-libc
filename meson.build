@@ -3,14 +3,17 @@ project('Embedded Artistry libc',
 	['c', 'cpp'],
 	default_options : [
 	  'c_std=c11',
-	  'cpp_std=c++17'
+	  'cpp_std=c++17',
+          'warning_level=3',
+          'werror=false'
 	],
 	license: 'MIT',
 	meson_version: '>0.51.0',
 	version: '1.0')
 
+c_compiler = meson.get_compiler('c')
 
-libbsd_dep = meson.get_compiler('c').find_library('bsd')
+add_project_arguments('-Wno-unknown-pragmas', language: 'c')
 
 openlibm_includes = include_directories(
   'subprojects/openlibm/include',

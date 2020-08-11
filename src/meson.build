@@ -236,9 +236,14 @@ libgdtoa = static_library('gdtoa',
 			  c_args: gdtoa_compiler_flags,
 			 )
 
+libc_compile_flags = c_compiler.get_supported_arguments(
+  '-nostdinc', # Don't include standard include paths -- we have our own.
+)
+
 libc_native = static_library(
   'c',
   libc_common_files + libc_native_files,
+  c_args: libc_compile_flags,
   include_directories: [libc_includes,
 			arch_specific_includes],
   dependencies: [libprintf_dep, openlibm_dep]

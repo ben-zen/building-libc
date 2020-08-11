@@ -67,13 +67,14 @@ libc_test_files = files(
   'test/rand.c'
 )
 
-libc_tests_includes = include_directories('/usr/include/bsd')
+libc_test_flags = c_compiler.get_supported_arguments(
+  '-Wno-unused-parameter'
+)
 
 libc_tests = executable('libc_test',
 			libc_test_files,
-			c_args: '-DLIBBSD_OVERLAY',
-			include_directories: libc_tests_includes,
-			dependencies: [libbsd_dep, cmocka_dep, libc_native_dep])
+			c_args: libc_test_flags,
+			dependencies: [cmocka_dep, libc_native_dep])
 
 test_output_dir = 'CMOCKA_XML_FILE=' + meson.build_root() + '/test/%g.xml'
 test('libc_tests',
