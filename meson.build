@@ -13,7 +13,12 @@ project('Embedded Artistry libc',
 
 c_compiler = meson.get_compiler('c')
 
-add_project_arguments('-Wno-unknown-pragmas', language: 'c')
+add_project_arguments(
+  c_compiler.get_supported_arguments(
+    '-Wno-unknown-pragmas',
+    '-Wno-nonnull',
+    '-Wno-nonnull-compare'
+  ), language: 'c')
 
 openlibm_includes = include_directories(
   'subprojects/openlibm/include',

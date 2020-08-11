@@ -1,2 +1,7 @@
 # Ignore emacs backup files
 *~
+
+# Ignore output folders
+build/*
+subprojects/*/**
+
