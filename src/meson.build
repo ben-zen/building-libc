@@ -240,10 +240,6 @@ libc_compile_flags = c_compiler.get_supported_arguments(
   '-nostdinc', # Don't include standard include paths -- we have our own.
 )
 
-if custom_build_variant == 'debug'
- libc_compile_flags += '-DGDTOA_HOST_DEBUG'
-endif
-
 if disable_unimplemented_apis
   libc_compile_flags += '-DDISABLE_UNIMPLEMENTED_LIBC_APIS'
 endif

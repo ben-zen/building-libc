@@ -5,7 +5,9 @@ project('Embedded Artistry libc',
 	  'c_std=c11',
 	  'cpp_std=c++17',
           'warning_level=3',
-          'werror=false'
+          'werror=false',
+          'debug=true',
+          'optimization=g'
 	],
 	license: 'MIT',
 	meson_version: '>0.51.0',
@@ -20,21 +22,12 @@ add_project_arguments(
     '-Wno-nonnull-compare'
   ), language: 'c')
 
-custom_build_variant = get_option('build-variant')
+debug = get_option('debug')
 disable_unimplemented_apis = get_option('hide-unimplemented-libc-apis')
 enable_gnu_src = get_option('enable-gnu-extensions')
 
-if (custom_build_variant == 'debug')
-  add_project_arguments(
-    [c_compiler.get_supported_arguments(
-      '-O0',
-      '-g'),
-     '-DDEBUG'], language: ['c', 'c++'])
-elif (custom_build_variant == 'release')
-  add_project_arguments(
-    [c_compiler.get_supported_arguments(
-      '-O2'),
-     '-DNDEBUG'], language: ['c', 'c++'])
+if debug
+  add_project_arguments('-DDEBUG', '-DGDTOA_HOST_DEBUG', language: ['c', 'cpp'])
 endif
 
 openlibm_includes = include_directories(
