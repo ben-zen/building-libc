@@ -1,0 +1,18 @@
+[binaries]
+c = 'arm-none-eabi-gcc'
+cpp = 'arm-none-eabi-c++'
+ar = 'arm-none-eabi-ar'
+strip = 'arm-none-eabi-strip'
+
+[properties]
+objcopy = ['arm-none-eabi-objcopy']
+
+# This needs to be set, otherwise Meson attempts to run binaries on the builder.
+needs_exe_wrapper = true
+
+[host_machine]
+system = 'none'
+cpu_family = 'arm'
+endian = 'little'
+
+# We'll leave out the [target_machine] section here.
