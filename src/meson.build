@@ -240,6 +240,18 @@ libc_compile_flags = c_compiler.get_supported_arguments(
   '-nostdinc', # Don't include standard include paths -- we have our own.
 )
 
+if custom_build_variant == 'debug'
+ libc_compile_flags += '-DGDTOA_HOST_DEBUG'
+endif
+
+if disable_unimplemented_apis
+  libc_compile_flags += '-DDISABLE_UNIMPLEMENTED_LIBC_APIS'
+endif
+
+if enable_gnu_src
+  libc_compile_flags += '-D_GNU_SOURCE'
+endif
+
 libc_native = static_library(
   'c',
   libc_common_files + libc_native_files,
@@ -251,5 +263,10 @@ libc_native = static_library(
 
 libc_native_dep = declare_dependency(
   link_with: libc_native,
-  include_directories: [libc_includes, arch_specific_includes, openlibm_includes, libprintf_includes]
+  include_directories:
+    [libc_includes,
+     arch_specific_includes,
+     openlibm_includes,
+     libprintf_includes],
+  compile_args: libc_compile_flags
 )

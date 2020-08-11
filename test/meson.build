@@ -74,6 +74,7 @@ libc_test_flags = c_compiler.get_supported_arguments(
 libc_tests = executable('libc_test',
 			libc_test_files,
 			c_args: libc_test_flags,
+                        include_directories: [cmocka_inc],
 			dependencies: [cmocka_dep, libc_native_dep])
 
 test_output_dir = 'CMOCKA_XML_FILE=' + meson.build_root() + '/test/%g.xml'

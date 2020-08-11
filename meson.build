@@ -20,6 +20,23 @@ add_project_arguments(
     '-Wno-nonnull-compare'
   ), language: 'c')
 
+custom_build_variant = get_option('build-variant')
+disable_unimplemented_apis = get_option('hide-unimplemented-libc-apis')
+enable_gnu_src = get_option('enable-gnu-extensions')
+
+if (custom_build_variant == 'debug')
+  add_project_arguments(
+    [c_compiler.get_supported_arguments(
+      '-O0',
+      '-g'),
+     '-DDEBUG'], language: ['c', 'c++'])
+elif (custom_build_variant == 'release')
+  add_project_arguments(
+    [c_compiler.get_supported_arguments(
+      '-O2'),
+     '-DNDEBUG'], language: ['c', 'c++'])
+endif
+
 openlibm_includes = include_directories(
   'subprojects/openlibm/include',
   'subprojects/openlibm/src',
@@ -67,7 +84,7 @@ run_target('clear-test-results',
            command: [meson.source_root() + '/tools/clean-xml-tests.sh'])
 
 cmocka_dep = dependency('cmocka', required: false, fallback: ['cmocka', 'cmocka_dep'])
-
+cmocka_inc = include_directories('subprojects/cmocka-1.1.5/include')
 
 subdir('src')
 subdir('test')

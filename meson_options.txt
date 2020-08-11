@@ -1,0 +1,9 @@
+option('build-variant', type: 'combo', choices: ['debug', 'release'],
+       description: 'Sidestep the default Meson build variant logic for fine-grained control.',
+       value: 'debug')
+option('enable-gnu-extensions', type: 'boolean', value: false,
+       yield: true)
+option('hide-unimplemented-libc-apis', type: 'boolean', value: false,
+       description: 'Make unimplemented libc functions invisible to the compiler.',
+       yield: true)
+
