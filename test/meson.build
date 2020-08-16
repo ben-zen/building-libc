@@ -67,7 +67,7 @@ libc_test_files = files(
   'test/rand.c'
 )
 
-libc_test_flags = c_compiler.get_supported_arguments(
+libc_test_flags = build_c_compiler.get_supported_arguments(
   '-Wno-unused-parameter'
 )
 

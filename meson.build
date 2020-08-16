@@ -15,14 +15,23 @@ project('Embedded Artistry libc',
 	meson_version: '>0.51.0',
 	version: '1.0')
 
-c_compiler = meson.get_compiler('c')
+build_c_compiler = meson.get_compiler('c', native: true)
+host_c_compiler = meson.get_compiler('c', native: false)
 
 add_project_arguments(
-  c_compiler.get_supported_arguments(
+  build_c_compiler.get_supported_arguments(
     '-Wno-unknown-pragmas',
     '-Wno-nonnull',
     '-Wno-nonnull-compare'
-  ), language: 'c')
+  ), language: 'c', native: true)
+
+add_project_arguments(
+  host_c_compiler.get_supported_arguments(
+    '-Wno-unknown-pragmas',
+    '-Wno-nonnull',
+    '-Wno-nonnull-compare'
+  ), language: 'c', native: false)
+
 
 debug = get_option('debug')
 disable_unimplemented_apis = get_option('hide-unimplemented-libc-apis')
