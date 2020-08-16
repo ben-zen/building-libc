@@ -18,18 +18,18 @@ project('Embedded Artistry libc',
 build_c_compiler = meson.get_compiler('c', native: true)
 host_c_compiler = meson.get_compiler('c', native: false)
 
+project_arguments = [
+  '-Wno-unknown-pragmas',
+  '-Wno-nonnull',
+  '-Wno-nonnull-compare']
 add_project_arguments(
   build_c_compiler.get_supported_arguments(
-    '-Wno-unknown-pragmas',
-    '-Wno-nonnull',
-    '-Wno-nonnull-compare'
+    project_arguments
   ), language: 'c', native: true)
 
 add_project_arguments(
   host_c_compiler.get_supported_arguments(
-    '-Wno-unknown-pragmas',
-    '-Wno-nonnull',
-    '-Wno-nonnull-compare'
+    project_arguments
   ), language: 'c', native: false)
 
 
@@ -38,7 +38,9 @@ disable_unimplemented_apis = get_option('hide-unimplemented-libc-apis')
 enable_gnu_src = get_option('enable-gnu-extensions')
 
 if debug
-  add_project_arguments('-DDEBUG', '-DGDTOA_HOST_DEBUG', language: ['c', 'cpp'])
+  debug_flags = ['-DDEBUG', '-DGDTOA_HOST_DEBUG']
+  add_project_arguments(debug_flags, language: ['c', 'cpp'])
+  add_project_arguments(debug_flags, language: ['c', 'cpp'], native: true)
 endif
 
 arch_directory_template = 'arch/@0@/include'
