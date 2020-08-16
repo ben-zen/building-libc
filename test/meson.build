@@ -71,11 +71,14 @@ libc_test_flags = c_compiler.get_supported_arguments(
   '-Wno-unused-parameter'
 )
 
-libc_tests = executable('libc_test',
-			libc_test_files,
-			c_args: libc_test_flags,
-                        include_directories: [cmocka_inc],
-			dependencies: [cmocka_dep, libc_native_dep])
+libc_tests = executable(
+  'libc_test',
+  libc_test_files,
+  c_args: libc_test_flags,
+  include_directories: [cmocka_inc],
+  dependencies: [cmocka_dep, libc_native_dep],
+  native: true
+)
 
 test_output_dir = 'CMOCKA_XML_FILE=' + meson.build_root() + '/test/%g.xml'
 test('libc_tests',

@@ -215,8 +215,6 @@ libc_common_files = [
   wchar_files
 ]
 
-arch_specific_includes = include_directories('../arch/x86_64/include')
-
 # Used to compile libc on the build machine
 libc_native_files = [
   'stdio/putchar_native.c'
@@ -249,19 +247,20 @@ if enable_gnu_src
 endif
 
 libc_native = static_library(
-  'c',
+  'c_native',
   libc_common_files + libc_native_files,
   c_args: libc_compile_flags,
   include_directories: [libc_includes,
-			arch_specific_includes],
-  dependencies: [libprintf_dep, openlibm_dep]
+                        build_machine_arch_includes],
+  dependencies: [libprintf_native_dep, openlibm_dep],
+  native: true
 )
 
 libc_native_dep = declare_dependency(
   link_with: libc_native,
   include_directories:
     [libc_includes,
-     arch_specific_includes,
+     build_machine_arch_includes,
      openlibm_includes,
      libprintf_includes],
   compile_args: libc_compile_flags

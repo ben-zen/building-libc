@@ -1,0 +1,10 @@
+# layer with arm.txt
+
+[properties]
+c_args = ['-mcpu=cortex-m3', '-mfloat-abi=soft', '-mabi=aapcs', '-mthumb']
+c_link_args =  ['-mcpu=cortex-m3', '-mfloat-abi=soft', '-mabi=aapcs', '-mthumb']
+cpp_args =  ['-mcpu=cortex-m3', '-mfloat-abi=soft', '-mabi=aapcs', '-mthumb']
+cpp_link_args =  ['-mcpu=cortex-m3', '-mfloat-abi=soft', '-mabi=aapcs', '-mthumb']
+
+[host_machine]
+cpu = 'cortex-m3'
