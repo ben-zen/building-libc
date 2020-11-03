@@ -78,6 +78,8 @@ gdtoa_files = files(
 
 gdtoa_includes = include_directories('gdtoa/include')
 
+gdtoa_sys_includes = include_directories('gdtoa/include', is_system: true)
+
 gdtoa_compiler_flags = [
   '-DNO_ERRNO',
   '-DIFNAN_CHECK',
@@ -228,6 +230,8 @@ libc_standalone_files = [
 # Use the parent directory's include/ directory.
 libc_includes = include_directories('../include')
 
+libc_sys_includes = include_directories('../include', is_system: true)
+
 libgdtoa = static_library('gdtoa',
 			  gdtoa_files,
 			  include_directories: gdtoa_includes,
@@ -256,16 +260,19 @@ libc_native = static_library(
   libc_common_files + libc_native_files,
   c_args: libc_build_compile_flags + libc_compile_flags,
   include_directories: [libc_includes,
-                        build_machine_arch_includes],
+                        build_machine_arch_includes,
+                        gdtoa_includes
+                       ],
   dependencies: [libprintf_native_dep, openlibm_dep],
   native: true
 )
 
 libc_native_dep = declare_dependency(
-  link_with: libc_native,
+  link_with: libc_native, 
   include_directories:
-    [libc_includes,
-     build_machine_arch_includes,
+    [libc_sys_includes,
+     build_machine_arch_sys_includes,
+     gdtoa_sys_includes,
      openlibm_includes,
      libprintf_includes],
   compile_args: libc_build_compile_flags + libc_compile_flags
@@ -275,6 +282,7 @@ libc = static_library(
   'c',
   libc_common_files + libc_standalone_files,
   include_directories: [libc_includes,
+                        gdtoa_includes,
                         host_machine_arch_includes],
   dependencies: [libprintf_dep, openlibm_dep],
   c_args: libc_host_compile_flags + libc_compile_flags,
@@ -284,8 +292,9 @@ libc = static_library(
 libc_dep = declare_dependency(
   link_with: libc,
   include_directories:
-    [libc_includes,
-     host_machine_arch_includes,
+    [libc_sys_includes,
+     gdtoa_sys_includes,
+     host_machine_arch_sys_includes,
      openlibm_includes,
      libprintf_includes],
   compile_args: libc_host_compile_flags + libc_compile_flags

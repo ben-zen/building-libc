@@ -44,8 +44,12 @@ if debug
 endif
 
 arch_directory_template = 'arch/@0@/include'
-build_machine_arch_includes = include_directories(arch_directory_template.format(build_machine.cpu_family()))
-host_machine_arch_includes = include_directories(arch_directory_template.format(host_machine.cpu_family()))
+build_machine_path = arch_directory_template.format(build_machine.cpu_family())
+build_machine_arch_includes = include_directories(build_machine_path)
+build_machine_arch_sys_includes = include_directories(build_machine_path, is_system: true)
+host_machine_path = arch_directory_template.format(host_machine.cpu_family())
+host_machine_arch_includes = include_directories(host_machine_path)
+host_machine_arch_sys_includes = include_directories(host_machine_path, is_system: true)
 
 openlibm_includes = include_directories(
   'subprojects/openlibm/include',
