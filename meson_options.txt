@@ -1,3 +1,9 @@
+option('disable-builtins', type: 'boolean', value: true,
+       description: 'Turn off compiler built-in functions, to avoid contaminating builds.',
+       yield: true)
+option('disable-stack-protection', type: 'boolean', value: true,
+       description: 'Turn off stack protection, useful on microcontrollers.',
+       yield: true)
 option('enable-gnu-extensions', type: 'boolean', value: false,
        yield: true)
 option('hide-unimplemented-libc-apis', type: 'boolean', value: false,

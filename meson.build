@@ -34,11 +34,14 @@ add_project_arguments(
 
 
 debug = get_option('debug')
+disable_builtins = get_option('disable-builtins')
+disable_stack_protection = get_option('disable-stack-protection')
 disable_unimplemented_apis = get_option('hide-unimplemented-libc-apis')
 enable_gnu_src = get_option('enable-gnu-extensions')
 
+
 if debug
-  debug_flags = ['-DDEBUG', '-DGDTOA_HOST_DEBUG']
+  debug_flags = ['-DDEBUG']
   add_project_arguments(debug_flags, language: ['c', 'cpp'])
   add_project_arguments(debug_flags, language: ['c', 'cpp'], native: true)
 endif
@@ -66,25 +69,10 @@ libprintf_includes = include_directories(
   'subprojects/printf',
   is_system: true
 )
-libprintf = static_library(
-  'printf',
-  libprintf_files,
-  include_directories: libprintf_includes
-)
-libprintf_dep = declare_dependency(
-  include_directories: libprintf_includes,
-  link_with: libprintf
-)
 
-libprintf_native = static_library(
-  'printf_native',
-  libprintf_files,
+printf_dep = declare_dependency(
   include_directories: libprintf_includes,
-  native: true
-)
-libprintf_native_dep = declare_dependency(
-  include_directories: libprintf_includes,
-  link_with: libprintf_native
+  sources: libprintf_files,
 )
 
 printf_test_files = files('subprojects/printf/test/test_suite.cpp')

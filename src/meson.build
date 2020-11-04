@@ -207,6 +207,7 @@ wchar_files = files(
 libc_common_files = [
   assert_files,
   ctype_files,
+  gdtoa_files,
   locale_files,
   math_files,
   stdio_files,
@@ -228,7 +229,10 @@ libc_standalone_files = [
 ]
 
 # Use the parent directory's include/ directory.
-libc_includes = include_directories('../include')
+libc_includes = [
+  include_directories('../include'),
+  gdtoa_includes
+]
 
 libc_sys_includes = include_directories('../include', is_system: true)
 
@@ -238,15 +242,28 @@ libgdtoa = static_library('gdtoa',
 			  c_args: gdtoa_compiler_flags,
 			 )
 
-libc_build_compile_flags = build_c_compiler.get_supported_arguments(
-  '-nostdinc', # Don't include standard include paths -- we have our own.
+libc_target_compile_flags = [
+  '-nostdinc' # Don't include standard include paths -- we have our own.
+]
+
+if disable_builtins
+  libc_target_compile_flags += [ '-fno-builtin' ]
+endif
+
+if disable_stack_protection
+  libc_target_compile_flags += [ '-fno-stack-protection' ]
+endif
+
+libc_native_compile_flags = build_c_compiler.get_supported_arguments(
+  libc_target_compile_flags
 )
 
 libc_host_compile_flags = host_c_compiler.get_supported_arguments(
-  '-nostdinc'
+  libc_target_compile_flags
 )
 
-libc_compile_flags = []
+libc_compile_flags = gdtoa_compiler_flags
+
 if disable_unimplemented_apis
   libc_compile_flags += '-DDISABLE_UNIMPLEMENTED_LIBC_APIS'
 endif
@@ -255,15 +272,26 @@ if enable_gnu_src
   libc_compile_flags += '-D_GNU_SOURCE'
 endif
 
+libc_native_link_flags = build_c_compiler.first_supported_argument(
+  '-nolibc',
+  '-nostdlib'
+) # Don't rely compiler or system libc
+
+libc_host_link_flags = host_c_compiler.get_supported_arguments(
+  '-nolibc',
+  '-nostdlib',
+  '-nostartfiles',
+) # Don't rely on compiler or system libc  
+
 libc_native = static_library(
   'c_native',
   libc_common_files + libc_native_files,
-  c_args: libc_build_compile_flags + libc_compile_flags,
+  c_args: libc_native_compile_flags + libc_compile_flags,
   include_directories: [libc_includes,
                         build_machine_arch_includes,
                         gdtoa_includes
                        ],
-  dependencies: [libprintf_native_dep, openlibm_dep],
+  dependencies: [printf_dep, openlibm_dep],
   native: true
 )
 
@@ -275,7 +303,8 @@ libc_native_dep = declare_dependency(
      gdtoa_sys_includes,
      openlibm_includes,
      libprintf_includes],
-  compile_args: libc_build_compile_flags + libc_compile_flags
+  compile_args: libc_native_compile_flags + libc_compile_flags,
+  link_args: libc_native_link_flags,
 )
 
 libc = static_library(
@@ -284,7 +313,7 @@ libc = static_library(
   include_directories: [libc_includes,
                         gdtoa_includes,
                         host_machine_arch_includes],
-  dependencies: [libprintf_dep, openlibm_dep],
+  dependencies: [printf_dep, openlibm_dep],
   c_args: libc_host_compile_flags + libc_compile_flags,
   native: false
 )
@@ -297,5 +326,6 @@ libc_dep = declare_dependency(
      host_machine_arch_sys_includes,
      openlibm_includes,
      libprintf_includes],
-  compile_args: libc_host_compile_flags + libc_compile_flags
+  compile_args: libc_host_compile_flags + libc_compile_flags,
+  link_args: libc_host_link_flags,
 )
